@@ -1,4 +1,4 @@
-# Munki Manifest Generator
+![mmglogo](https://user-images.githubusercontent.com/78877636/191769701-64107e63-dc4e-47ef-977b-baa89c88c410.png)
 
 This is a tool to generate Munki manifests for devices managed by Intune. Instead of manually managing manifests for each device, this tool uses the groups the user and/or device is a member of to determine which included manifests and catalogs the device should be a memmber of.
 
