@@ -89,7 +89,23 @@ if webhook is True:
 else:
 	mmg.main(group_list=groups)
 ```
-# Testing mode
+
+## Install this package
+```python
+pip install Munki-Manifest-Generator
+```
+
+## Update this package
+```python
+pip install Munki-Manifest-Generator --upgrade
+```
+
+## Get help
+```python
+Munki-Manifest-Generator --help
+```
+
+## Testing mode
 
 To run this tool without making any changes to the manifests on Azure Storage, which can be useful to test the groups in a json file or validate nothing unwanted will happen in your environment. The only thing you'll have to do is add the `-t` parameter.
 
@@ -103,7 +119,7 @@ Running from a script:
 mmg.main(group_list=groups, test=True)
 ```
 
-# Environment variables
+## Environment variables
 
 To use the tool, you must set a couple of environment variables that will be used to authenticate to Azure Storage and Microsoft Graph,
 - CLIENT_ID - Azure AD App Registration client id
@@ -112,13 +128,13 @@ To use the tool, you must set a couple of environment variables that will be use
 - CONTAINER_NAME - Name of your Azure Storage Container
 - AZURE_STORAGE_CONNECTION_STRING - Connection string to your Azure Storage account
 
-# Azure AD app registration permissions
+## Azure AD app registration permissions
 - DeviceManagementManagedDevices.Read.All
 - Directory.Read.All
 - GroupMember.Read.All
 - Group.Read.All
 
-# Generated manifest exmaple
+## Generated manifest exmaple
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -149,7 +165,7 @@ To use the tool, you must set a couple of environment variables that will be use
 </plist>
 ```
 
-# Example output
+## Example output
 ![mmg1](https://user-images.githubusercontent.com/78877636/191742519-35c316be-d5e7-4a87-b2ff-711a0519c624.jpg)
 
 ![mmg2](https://user-images.githubusercontent.com/78877636/191742531-13274273-098c-4b54-9d54-62c11776dcd5.jpg)
