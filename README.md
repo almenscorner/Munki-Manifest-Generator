@@ -1,4 +1,13 @@
-![mmglogo](https://user-images.githubusercontent.com/78877636/191769701-64107e63-dc4e-47ef-977b-baa89c88c410.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/78877636/191977945-eb1c4e6f-85f7-429d-afa9-9acfc43d33c1.png" alt="mmg logo"/>
+</p>
+<p align="center">
+  <img src="https://img.shields.io/pypi/l/Munki-Manifest-Generator?style=flat-square" alt=""/>
+  <img src="https://img.shields.io/pypi/dm/Munki-Manifest-Generator?style=flat-square" alt=""/>
+  <img src="https://img.shields.io/pypi/pyversions/Munki-Manifest-Generator?style=flat-square" alt=""/>
+  <img src="https://img.shields.io/pypi/v/Munki-Manifest-Generator?style=flat-square" alt=""/>
+  <img src="https://github.com/almenscorner/Munki-Manifest-Generator/actions/workflows/python-publish.yml/badge.svg" alt=""/>
+</p>
 
 This is a tool to generate Munki manifests for devices managed by Intune. Instead of manually managing manifests for each device, this tool uses the groups the user and/or device is a member of to determine which included manifests and catalogs the device should be a memmber of.
 
