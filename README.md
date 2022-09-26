@@ -13,6 +13,8 @@ This is a tool to generate Munki manifests for devices managed by Intune. Instea
 
 To do this, you create a JSON file and pass that when executing like this `munki-manifest-generator -j path_to_json`. The JSON needs to be spcified like below,
 
+**NOTE:** Name of the manifest in Munki should match with the name of the group
+
 ```json
 [
     {
