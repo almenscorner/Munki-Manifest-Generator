@@ -9,7 +9,7 @@
   <img src="https://github.com/almenscorner/Munki-Manifest-Generator/actions/workflows/python-publish.yml/badge.svg" alt=""/>
 </p>
 
-This is a tool to generate Munki manifests for devices managed by Intune. Instead of manually managing manifests for each device, this tool uses the groups the user and/or device is a member of to determine which included manifests and catalogs the device should be a memmber of.
+This is a tool to generate Munki manifests for devices managed by Intune. Instead of manually managing manifests for each device, this tool uses the groups the user and/or device is a member of to determine which included manifests and catalogs the device should be a member of.
 
 To do this, you create a JSON file and pass that when executing like this `munki-manifest-generator -j path_to_json`. The JSON needs to be spcified like below,
 
