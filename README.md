@@ -142,7 +142,7 @@ mmg.main(group_list=groups, test=True)
 To use the tool, you must set a couple of environment variables that will be used to authenticate to Azure Storage and Microsoft Graph,
 - CLIENT_ID - Azure AD App Registration client id
 - CLIENT_SECRET - Azure AD App Registration client secret
-- TENANT_NAME - Name of your Azure tenant, i.e. example@onmicrosoft.com
+- TENANT_NAME - Name of your Azure tenant, i.e. example.onmicrosoft.com
 - CONTAINER_NAME - Name of your Azure Storage Container
 - AZURE_STORAGE_CONNECTION_STRING - Connection string to your Azure Storage account
 
