@@ -101,6 +101,13 @@ else:
 	mmg.main(group_list=groups)
 ```
 
+In addition to importing this package to your automation account when running from Azure Automation, you must also import the following packages,
+- [adal](https://pypi.org/project/adal/)
+- [azure-core](https://pypi.org/project/azure-core/)
+- [azure-storage-blob](https://pypi.org/project/azure-storage-blob/)
+- [msrest](https://pypi.org/project/msrest/)
+- [typing-extensions](https://pypi.org/project/typing-extensions/)
+
 ## Install this package
 ```python
 pip install Munki-Manifest-Generator
