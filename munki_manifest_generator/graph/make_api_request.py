@@ -14,7 +14,7 @@ def make_api_request(endpoint, token, q_param=None):
 
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "Bearer {0}".format(token["accessToken"]),
+        "Authorization": "Bearer {0}".format(token["access_token"]),
     }
 
     # This section handles a bug with the Python requests module which
