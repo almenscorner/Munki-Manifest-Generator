@@ -146,6 +146,12 @@ To use the tool, you must set a couple of environment variables that will be use
 - CONTAINER_NAME - Name of your Azure Storage Container
 - AZURE_STORAGE_CONNECTION_STRING - Connection string to your Azure Storage account
 
+If using interactive authentication, the CLIENT_SECRET is not required.
+
+If using certificate authentication, additional environment variables are required,
+- THUMBPRINT - Thumbprint of the certificate on your app registration
+- KEY_FILE - Path to the private key of the certificate on your app registation
+
 ## Azure AD app registration permissions
 - DeviceManagementManagedDevices.Read.All
 - Directory.Read.All
