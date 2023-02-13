@@ -11,7 +11,7 @@ import argparse
 from operator import itemgetter
 from munki_manifest_generator.env_vars import check_env_vars
 from munki_manifest_generator.manifest import Manifest
-from munki_manifest_generator.graph.obtain_access_token import obtain_access_token
+from munki_manifest_generator.graph.get_authentication_token import getAuth
 from munki_manifest_generator.graph.make_api_request import make_api_request
 from munki_manifest_generator.graph.get_device_group_membership import (
     get_device_group_membership,
@@ -35,6 +35,8 @@ def main(**kwargs):
     l = None
     s = None
     t = None
+    c = None
+    i = None
 
     if not kwargs:
         argparser = argparse.ArgumentParser()
@@ -60,8 +62,20 @@ def main(**kwargs):
         )
         argparser.add_argument(
             "-t",
-            "--test",
+           "--test",
             help="Enable testing, no changes will be made to manifests on Azure Storage.",
+            action="store_true",
+        )
+        argparser.add_argument(
+            "-c",
+            "--certauth",
+            help="When using certificate auth, the following ENV variables is required: TENANT_NAME, CLIENT_ID, THUMBPRINT, KEY_FILE",
+            action="store_true",
+        )
+        argparser.add_argument(
+            "-i",
+            "--interactiveauth",
+            help="When using interactive auth, the following ENV variables is required: TENANT_NAME, CLIENT_ID",
             action="store_true",
         )
 
@@ -78,6 +92,8 @@ def main(**kwargs):
         l = kwargs.get("group_list")
         sm = kwargs.get("safe_manifest")
         t = kwargs.get("test")
+        c = kwargs.get("certauth")
+        i = kwargs.get("interactiveauth")
 
         if t:
             print(
@@ -85,16 +101,18 @@ def main(**kwargs):
             )
 
 
-    def run(json_file, group_list, serial_number, SAFE_MANIFEST, TEST):
+    def run(json_file, group_list, serial_number, SAFE_MANIFEST, TEST, CERTAUTH, INTERACTIVEAUTH):
 
-        check_env_vars()
-        CLIENT_ID = os.environ.get("CLIENT_ID")
-        CLIENT_SECRET = os.environ.get("CLIENT_SECRET")
-        TENANT_NAME = os.environ.get("TENANT_NAME")
+        if not all([os.environ.get("CONTAINER_NAME"), os.environ.get("AZURE_STORAGE_CONNECTION_STRING")]):
+            raise Exception("Missing required environment variables, stopping...")
         CONTAINER_NAME = os.environ.get("CONTAINER_NAME")
         CONNECTION_STRING = os.environ.get("AZURE_STORAGE_CONNECTION_STRING")
         ENDPOINT = "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices"
-        TOKEN = obtain_access_token(CLIENT_ID, CLIENT_SECRET, TENANT_NAME)
+        if not CERTAUTH and not INTERACTIVEAUTH:
+            APP = True
+        else:
+            APP = False
+        TOKEN = getAuth(APP, CERTAUTH, INTERACTIVEAUTH)
         CURRENT_MANIFESTS = get_current_manifest_blobs(
             CONNECTION_STRING, CONTAINER_NAME
         )
@@ -264,9 +282,9 @@ def main(**kwargs):
                 )
 
     if not kwargs:
-        run(args.json, args.group_list, args.serial_number, args.safe_manifest, args.test)
+        run(args.json, args.group_list, args.serial_number, args.safe_manifest, args.test, args.certauth, args.interactiveauth)
     else:
-        run(j, l, s, sm, t)
+        run(j, l, s, sm, t, c, i)
 
 
 if __name__ == "__main__":

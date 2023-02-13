@@ -102,7 +102,7 @@ else:
 ```
 
 In addition to importing this package to your automation account when running from Azure Automation, you must also import the following packages,
-- [adal](https://pypi.org/project/adal/)
+- [msal](https://pypi.org/project/msal)
 - [azure-core](https://pypi.org/project/azure-core/)
 - [azure-storage-blob](https://pypi.org/project/azure-storage-blob/)
 - [msrest](https://pypi.org/project/msrest/)
@@ -145,6 +145,12 @@ To use the tool, you must set a couple of environment variables that will be use
 - TENANT_NAME - Name of your Azure tenant, i.e. example.onmicrosoft.com
 - CONTAINER_NAME - Name of your Azure Storage Container
 - AZURE_STORAGE_CONNECTION_STRING - Connection string to your Azure Storage account
+
+If using interactive authentication, the CLIENT_SECRET is not required.
+
+If using certificate authentication, additional environment variables are required,
+- THUMBPRINT - Thumbprint of the certificate on your app registration
+- KEY_FILE - Path to the private key of the certificate on your app registation
 
 ## Azure AD app registration permissions
 - DeviceManagementManagedDevices.Read.All

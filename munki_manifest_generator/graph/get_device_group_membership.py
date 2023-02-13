@@ -4,7 +4,6 @@
 This module is used to get the device group membership and update included manifests.
 """
 
-from munki_manifest_generator.graph.obtain_access_token import obtain_access_token
 from munki_manifest_generator.graph.make_api_request import make_api_request
 
 ENDPOINT = "https://graph.microsoft.com/v1.0/devices"
