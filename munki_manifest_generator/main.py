@@ -9,7 +9,6 @@ import json
 import argparse
 
 from operator import itemgetter
-from munki_manifest_generator.env_vars import check_env_vars
 from munki_manifest_generator.manifest import Manifest
 from munki_manifest_generator.graph.get_authentication_token import getAuth
 from munki_manifest_generator.graph.make_api_request import make_api_request
