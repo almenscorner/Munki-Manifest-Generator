@@ -122,6 +122,7 @@ def update_manifest_blob(
     group_membership,
     groups,
     test,
+    default_catalog,
 ):
     """Updates the manifest with the given file name and data."""
     try:
@@ -144,7 +145,7 @@ def update_manifest_blob(
 
             # Get updates to device catalogs
             add_catalog = get_device_catalogs(
-                groups, device_manifest, add_catalogs=True
+                groups, device_manifest, default_catalog, add_catalogs=True
             )
             # If updated catalogs are not equal to the current catalogs, update the manifest
             if add_catalog != device_manifest.catalogs:
@@ -185,7 +186,7 @@ def update_manifest_blob(
 
             # Check if there are catalogs to remove
             remove_catalogs = get_device_catalogs(
-                groups, device_manifest, remove_catalogs=True
+                groups, device_manifest, default_catalog, remove_catalogs=True
             )
 
             plistlib.dump(device_manifest.__dict__, _f)
