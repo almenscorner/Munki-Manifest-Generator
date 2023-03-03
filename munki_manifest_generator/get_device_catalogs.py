@@ -8,7 +8,7 @@ from collections import defaultdict
 
 
 def get_device_catalogs(
-    groups, device_manifest, add_catalogs=False, remove_catalogs=False
+    groups, device_manifest, default_catalog, add_catalogs=False, remove_catalogs=False
 ):
 
     GROUP_CATALOGS = [
@@ -20,7 +20,7 @@ def get_device_catalogs(
     ]
 
     if add_catalogs:
-        catalogs = ["Production"]
+        catalogs = [default_catalog]
 
         for group in groups:
             if group["catalog"] is not None:
@@ -39,7 +39,7 @@ def get_device_catalogs(
         multiple_result = dict(grouped_by_catalog)
 
         for catalog in device_manifest.catalogs:
-            if catalog not in GROUP_CATALOGS and catalog != "Production":
+            if catalog not in GROUP_CATALOGS and catalog != default_catalog:
                 device_manifest.catalogs.remove(catalog)
                 catalogs_to_remove.append(catalog)
 
