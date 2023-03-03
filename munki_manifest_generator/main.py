@@ -34,6 +34,7 @@ def main(**kwargs):
     l = None
     s = None
     t = None
+    d = None
     c = None
     i = None
 
@@ -66,6 +67,11 @@ def main(**kwargs):
             action="store_true",
         )
         argparser.add_argument(
+            "-d", "--default_catalog", 
+            help="Default catalog for all devices. If not specified, the default catalog will be 'Production'."
+            
+        )
+        argparser.add_argument(
             "-c",
             "--certauth",
             help="When using certificate auth, the following ENV variables is required: TENANT_NAME, CLIENT_ID, THUMBPRINT, KEY_FILE",
@@ -91,6 +97,7 @@ def main(**kwargs):
         l = kwargs.get("group_list")
         sm = kwargs.get("safe_manifest")
         t = kwargs.get("test")
+        d = kwargs.get("default_catalog")
         c = kwargs.get("certauth")
         i = kwargs.get("interactiveauth")
 
@@ -100,7 +107,7 @@ def main(**kwargs):
             )
 
 
-    def run(json_file, group_list, serial_number, SAFE_MANIFEST, TEST, CERTAUTH, INTERACTIVEAUTH):
+    def run(json_file, group_list, serial_number, SAFE_MANIFEST, TEST, DEFAULT_CATALOG, CERTAUTH, INTERACTIVEAUTH):
 
         if not all([os.environ.get("CONTAINER_NAME"), os.environ.get("AZURE_STORAGE_CONNECTION_STRING")]):
             raise Exception("Missing required environment variables, stopping...")
@@ -115,6 +122,12 @@ def main(**kwargs):
         CURRENT_MANIFESTS = get_current_manifest_blobs(
             CONNECTION_STRING, CONTAINER_NAME
         )
+
+        if DEFAULT_CATALOG:
+            DEFAULT_CATALOG = DEFAULT_CATALOG
+        else:
+            DEFAULT_CATALOG = "Production"
+
         # If a serial number is passed, create or update a manifest for that device
         if serial_number:
             Q_PARAM = {"$filter": "serialNumber eq '%s'" % serial_number}
@@ -228,7 +241,8 @@ def main(**kwargs):
                     device_manifest,
                     group_membership,
                     GROUPS,
-                    TEST
+                    TEST,
+                    DEFAULT_CATALOG
                 )
 
             # If no manifest exists for the device, create one.
@@ -237,7 +251,7 @@ def main(**kwargs):
                 print("Manifest not found, creating")
 
                 device_manifest = Manifest(
-                    catalogs=["Production"],
+                    catalogs=[DEFAULT_CATALOG],
                     included_manifests=["site_default"],
                     display_name=device["serialNumber"],
                     serialnumber=device["serialNumber"],
@@ -269,7 +283,7 @@ def main(**kwargs):
                         group_membership += user_groups
 
                 device_manifest.catalogs = get_device_catalogs(
-                    GROUPS, device_manifest, add_catalogs=True
+                    GROUPS, device_manifest, DEFAULT_CATALOG, add_catalogs=True
                 )
 
                 create_manifest_blob(
@@ -281,9 +295,9 @@ def main(**kwargs):
                 )
 
     if not kwargs:
-        run(args.json, args.group_list, args.serial_number, args.safe_manifest, args.test, args.certauth, args.interactiveauth)
+        run(args.json, args.group_list, args.serial_number, args.safe_manifest, args.test, args.default_catalog, args.certauth, args.interactiveauth)
     else:
-        run(j, l, s, sm, t, c, i)
+        run(j, l, s, sm, t, d, c, i)
 
 
 if __name__ == "__main__":
