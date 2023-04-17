@@ -1,61 +1,61 @@
 #!/usr/bin/env python3
 
+import logging
+
+from munki_manifest_generator.logger import logger
+
 """
 This module is used to get the device group membership and update included manifests.
 """
 
-from munki_manifest_generator.graph.make_api_request import make_api_request
 
-ENDPOINT = "https://graph.microsoft.com/v1.0/devices"
-
-
-def get_device_group_membership(
-    token, aad_device_id, groups, current_manifests, device_manifest
-):
+def get_device_group_membership(responses, aad_device_id, groups, current_manifests, device_manifest):
     """Returns a list of group names the device is a member of and updates the included manifests."""
 
-    aad_device_object_id = None
-    q_param_device = {"$filter": "deviceId eq " + "'" + aad_device_id + "'"}
-    device_object = make_api_request(ENDPOINT, token, q_param_device)
+    try:
+        memberOf = [val for list in responses if aad_device_id in list["deviceId"] for val in list["value"]]
+        serial_number = device_manifest.__dict__["serialnumber"]
 
-    for id in device_object["value"]:
-        object_id = id["id"]
-        aad_device_object_id = object_id
-    q_param_group = {"$select": "id,displayName"}
+        if memberOf:
+            device_groups = []
+            device_groups_name = []
 
-    # If Azure AD device id is none, skip getting groups
-    if aad_device_object_id is None:
-        print("AAD Device ID is null, skipping device group memberships")
+            for group_id in memberOf:
+                id = group_id["id"]
+                device_groups.append(id)
+                device_groups_name.append(group_id["displayName"])
 
-    else:
-        memberOf = make_api_request(
-            ENDPOINT + "/" + aad_device_object_id + "/transitiveMemberOf", token, q_param_group
-        )
-            
-        device_groups = []
-        device_groups_name = []
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.debug(
+                    "[%s] Device found in groups: %s",
+                    serial_number,
+                    ", ".join(device_groups_name),
+                )
+                logger.debug(
+                    "[%s] Groups from JSON or list: %s",
+                    serial_number,
+                    str(groups),
+                )
 
-        for group_id in memberOf["value"]:
-            id = group_id["id"]
-            device_groups.append(id)
-            device_groups_name.append(group_id["displayName"])
-
-        for group in groups:
-            if group["type"] == "device":
-                if group["id"] in device_groups:
-                    if group["name"] in current_manifests:
-                        if group["name"] not in device_manifest.included_manifests:
-                            print(
-                                "Device found in group for "
-                                + group["name"]
-                                + ", adding included manifest for group"
+            for group in groups:
+                if group["type"] == "device":
+                    if group["id"] in device_groups:
+                        if group["name"] in current_manifests:
+                            if group["name"] not in device_manifest.included_manifests:
+                                logger.info(
+                                    "[%s] Device found in group for %s, adding included manifest for group",
+                                    serial_number,
+                                    group["name"],
+                                )
+                                device_manifest.included_manifests.append(group["name"])
+                        else:
+                            logger.info(
+                                "[%s] Device found in group for %s but manifest does not exist, skipping",
+                                serial_number,
+                                group["name"],
                             )
-                            device_manifest.included_manifests.append(group["name"])
-                    else:
-                        print(
-                            "Device found in group for "
-                            + (group["name"])
-                            + " but manifest does not exist, skipping"
-                        )
 
-        return device_groups_name
+            return device_groups_name
+
+    except Exception as e:
+        logger.error(f"Device Groups failed with: {e}")

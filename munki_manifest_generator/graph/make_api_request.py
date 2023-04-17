@@ -7,6 +7,8 @@ This module is used to make API requests to the Graph API.
 import requests
 import json
 
+from retrying import retry
+
 
 def make_api_request(endpoint, token, q_param=None):
     """Makes a get request and returns the response."""
@@ -42,6 +44,40 @@ def make_api_request(endpoint, token, q_param=None):
         return json_data
 
     else:
-        raise Exception(
-            "Request failed with ", response.status_code, " - ", response.text
-        )
+        raise Exception("Request failed with ", response.status_code, " - ", response.text)
+
+
+@retry(
+    wait_exponential_multiplier=1000,
+    wait_exponential_max=10000,
+    stop_max_attempt_number=5,
+)
+def make_api_request_Post(endpoint, token, q_param=None, jdata=None, status_code=200):
+    """
+    This function makes a POST request to the Microsoft Graph API.
+
+    :param patchEndpoint: The endpoint to make the request to.
+    :param token: The token to use for authenticating the request.
+    :param q_param: The query parameters to use for the request.
+    :param jdata: The JSON data to use for the request.
+    :param status_code: The status code to expect from the request.
+    """
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer {0}".format(token["access_token"]),
+    }
+
+    if q_param is not None:
+        response = requests.post(endpoint, headers=headers, params=q_param, data=jdata)
+    else:
+        response = requests.post(endpoint, headers=headers, data=jdata)
+    if response.status_code == status_code:
+        if response.text:
+            json_data = json.loads(response.text)
+            return json_data
+        else:
+            pass
+
+    else:
+        raise Exception("Request failed with ", response.status_code, " - ", response.text)

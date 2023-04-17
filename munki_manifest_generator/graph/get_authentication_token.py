@@ -7,15 +7,20 @@ This module is used to get the access token for the tenant.
 import os
 import json
 
-from munki_manifest_generator.graph.obtain_access_token import obtain_accesstoken_app, obtain_accesstoken_cert, obtain_accesstoken_interactive
+from munki_manifest_generator.graph.obtain_access_token import (
+    obtain_accesstoken_app,
+    obtain_accesstoken_cert,
+    obtain_accesstoken_interactive,
+)
 
-def getAuth(app, certauth, interactiveauth):
+
+def getAuth(app: bool, certauth: bool, interactiveauth: bool) -> dict:
     """
     This function authenticates to MS Graph and returns the access token.
 
-    :param mode: The mode used when using this tool
-    :param localauth: Path to dict with keys to authenticate
-    :param tenant: Which tenant to authenticate to, PROD or DEV
+    :param app: Boolean to indicate if the app authentication method should be used
+    :param certauth: Boolean to indicate if the certificate authentication method should be used
+    :param interactiveauth: Boolean to indicate if the interactive authentication method should be used
     :return: The access token
     """
 
