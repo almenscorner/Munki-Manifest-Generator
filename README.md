@@ -107,6 +107,7 @@ In addition to importing this package to your automation account when running fr
 - [azure-storage-blob](https://pypi.org/project/azure-storage-blob/)
 - [msrest](https://pypi.org/project/msrest/)
 - [typing-extensions](https://pypi.org/project/typing-extensions/)
+- [retrying](https://pypi.org/project/retrying/)
 
 ## Install this package
 ```python
