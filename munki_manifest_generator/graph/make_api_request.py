@@ -9,7 +9,11 @@ import json
 
 from retrying import retry
 
-
+@retry(
+    wait_exponential_multiplier=1000,
+    wait_exponential_max=10000,
+    stop_max_attempt_number=5,
+)
 def make_api_request(endpoint, token, q_param=None):
     """Makes a get request and returns the response."""
     # Create a valid header using the provided access token
